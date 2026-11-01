@@ -1,0 +1,53 @@
+services:
+  api:
+    build: .
+    container_name: fraudguard-api
+    command: ["python", "src/API_Score.py"]
+    ports:
+      - "8001:8001"
+    environment:
+      FRAUD_DATA_DIR: /app/data
+      FRAUD_MODEL_DIR: /app/models
+      FRAUD_HISTORY_CSV: ${FRAUD_HISTORY_CSV:-/app/data/sample/History.csv}
+    volumes:
+      - ./models:/app/models
+      - ./data:/app/data
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8001/health')"]
+      interval: 15s
+      timeout: 5s
+      retries: 8
+      start_period: 40s
+
+  dashboard:
+    build: .
+    container_name: fraudguard-dashboard
+    command: ["python", "src/dashboard.py"]
+    ports:
+      - "8002:8002"
+    environment:
+      FRAUD_DATA_DIR: /app/data
+      AGENT_API_URL: http://api:8001
+      DASHBOARD_PORT: "8002"
+    volumes:
+      - ./data:/app/data
+    depends_on:
+      api:
+        condition: service_healthy
+
+  # Flux de transactions simulées : docker compose --profile stream up ingestion
+  ingestion:
+    build: .
+    container_name: fraudguard-ingestion
+    profiles: ["stream"]
+    command: ["python", "/app/src/Ingestion.py"]
+    working_dir: /app/logs
+    environment:
+      FRAUD_SCORE_API_URL: http://api:8001/score
+      FRAUD_HISTORY_CSV: ${FRAUD_HISTORY_CSV:-/app/data/sample/History.csv}
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+    depends_on:
+      api:
+        condition: service_healthy

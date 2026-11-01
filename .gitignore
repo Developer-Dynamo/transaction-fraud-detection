@@ -1,0 +1,42 @@
+# --- Environnements et secrets ---
+venv/
+.venv/
+env/
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.ipynb_checkpoints/
+
+# --- Éditeurs / OS ---
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# --- Données : rien n'est versionné sauf data/README.md et data/sample/ ---
+# (le dataset Kaggle n'est pas redistribuable ; fraud.db et dashboard_auth.db
+#  contiennent des transactions et des comptes utilisateurs)
+data/*
+!data/README.md
+!data/sample/
+!data/sample/**
+
+# --- Sorties d'exécution créées à la racine par Ingestion.py / historique.py ---
+/Ingestion.csv
+/Ingestion_labels.csv
+/Ingestion*.bak
+*.csv.bak
+*.db
+*.sqlite
+logs/
+*.log
