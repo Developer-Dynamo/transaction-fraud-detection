@@ -1,0 +1,146 @@
+{
+  "test": {
+    "pr_auc": 0.9808,
+    "roc_auc": 0.9997,
+    "precision": 0.692,
+    "recall": 0.9815,
+    "f1_score": 0.8117,
+    "threshold": 0.02,
+    "n_test": 194502,
+    "confusion_matrix": {
+      "tp": 1112,
+      "fp": 495,
+      "fn": 21,
+      "tn": 192874
+    },
+    "fraud_amount_caught": 601622.96
+  },
+  "score_bands": {
+    "t_low": 0.006768687187480035,
+    "t_high": 0.38,
+    "source_low": "quantile 99.5% des probas L\u00c9GIT (validation)",
+    "source_high": "pr\u00e9cision >= 95%",
+    "recall_used": 0.98,
+    "review_share_validation": 0.00487,
+    "allow_max_score": 20.0,
+    "block_min_score": 80.0,
+    "target_recall": 0.98,
+    "target_precision": 0.95,
+    "max_review_share": 0.05,
+    "t_low_quantile": 0.995,
+    "scale": "log",
+    "p_floor": 1.6223686969638018e-09,
+    "validation": {
+      "n": 97250,
+      "n_fraud": 646,
+      "share_allow_pct": 98.843,
+      "share_review_pct": 0.493,
+      "share_block_pct": 0.664,
+      "fraud_in_allow": 5,
+      "fraud_in_review": 27,
+      "fraud_in_block": 614,
+      "recall_block_pct": 95.05,
+      "recall_block_or_review_pct": 99.23,
+      "precision_block_pct": 95.05,
+      "precision_review_pct": 5.64,
+      "review_per_1000_tx": 4.93,
+      "fraud_amount_missed_in_allow": 289.84
+    },
+    "test": {
+      "n": 194502,
+      "n_fraud": 1133,
+      "share_allow_pct": 98.942,
+      "share_review_pct": 0.475,
+      "share_block_pct": 0.583,
+      "fraud_in_allow": 14,
+      "fraud_in_review": 49,
+      "fraud_in_block": 1070,
+      "recall_block_pct": 94.44,
+      "recall_block_or_review_pct": 98.76,
+      "precision_block_pct": 94.36,
+      "precision_review_pct": 5.31,
+      "review_per_1000_tx": 4.75,
+      "fraud_amount_missed_in_allow": 2011.51
+    }
+  },
+  "metrics_by_period": [
+    {
+      "period": 1,
+      "n": 48626,
+      "n_fraud": 209,
+      "pr_auc": 0.9693,
+      "roc_auc": 0.9995,
+      "fraud_in_allow": 3,
+      "recall_block_or_review_pct": 98.56,
+      "precision_block_pct": 93.69,
+      "review_per_1000_tx": 5.41
+    },
+    {
+      "period": 2,
+      "n": 48626,
+      "n_fraud": 351,
+      "pr_auc": 0.9945,
+      "roc_auc": 1.0,
+      "fraud_in_allow": 0,
+      "recall_block_or_review_pct": 100.0,
+      "precision_block_pct": 95.0,
+      "review_per_1000_tx": 4.61
+    },
+    {
+      "period": 3,
+      "n": 48625,
+      "n_fraud": 261,
+      "pr_auc": 0.9823,
+      "roc_auc": 0.9998,
+      "fraud_in_allow": 3,
+      "recall_block_or_review_pct": 98.85,
+      "precision_block_pct": 92.54,
+      "review_per_1000_tx": 4.57
+    },
+    {
+      "period": 4,
+      "n": 48625,
+      "n_fraud": 312,
+      "pr_auc": 0.9718,
+      "roc_auc": 0.9995,
+      "fraud_in_allow": 8,
+      "recall_block_or_review_pct": 97.44,
+      "precision_block_pct": 95.67,
+      "review_per_1000_tx": 4.4
+    }
+  ],
+  "selected_features": [
+    "amt_vs_category_z",
+    "sum_amt_24h",
+    "amt",
+    "nb_tx_24h",
+    "hour",
+    "category_code",
+    "sum_amt_1h",
+    "tx_accel_1h_vs_24h",
+    "time_since_last_tx",
+    "amt_to_card_max",
+    "is_new_category",
+    "amt_share_of_24h",
+    "amt_zscore_card",
+    "amt_to_card_mean",
+    "hour_share_card"
+  ],
+  "forced_features": [
+    "amt_zscore_card",
+    "amt_to_card_mean",
+    "hour_share_card"
+  ],
+  "excluded_features": [],
+  "data_audit": [],
+  "n_candidate_features": 19,
+  "iso_score_quantiles": {
+    "p05": -0.5208712160470131,
+    "p50": -0.4000690000078134,
+    "p95": -0.36522784179836776
+  },
+  "iso_test_roc_auc": 0.9669360781147306,
+  "calibration_method": "platt_on_margin",
+  "spw_power": 0.5,
+  "trained_at": "2026-10-17T19:42:09"
+}
