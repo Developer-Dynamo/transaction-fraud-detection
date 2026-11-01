@@ -186,4 +186,4 @@ Les paramètres se règlent par variables d'environnement (voir `.env.example`).
 
 ## 👤 Auteur
 
-**[Ton nom]** — [LinkedIn](https://linkedin.com/in/...) · [Email](mailto:...)
+**Hajji Oussama** — [LinkedIn](linkedin.com/in/oussama-hajji-ensi) · [Email](mailto:oussama.hajji@ensi-uma.tn)
