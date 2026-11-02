@@ -1,4 +1,4 @@
-# 🛡️ FraudGuard ML — Détection de fraude bancaire en temps réel
+# 🛡️ FraudGuard ML | Détection de fraude bancaire en temps réel
 
 > Plateforme de bout en bout : modèle XGBoost calibré, API de scoring FastAPI, décision en 3 bandes (Autorisée / Revue / Bloquée) et dashboard analytique avec explications pour les analystes fraude.
 
