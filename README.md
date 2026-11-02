@@ -20,7 +20,7 @@
 
 ## 📊 Résultats
 
-Entraînement et évaluation sur le dataset public **Credit Card Transactions Fraud Detection** (Kaggle, `fraudTrain`, 1 296 675 transactions, 0,58 % de fraudes).
+Entraînement et évaluation sur le dataset public **Credit Card Transactions Fraud Detection** (Kaggle, `fraudTrain`, transactions bancaires simulées de type Sparkov, 1 296 675 transactions, 0,58 % de fraudes).
 Évaluation sur le **test chronologique final : 194 502 transactions, 1 133 fraudes** (jamais utilisé pour la calibration ni le choix des seuils).
 
 | Métrique | Valeur |
@@ -117,7 +117,7 @@ Entraînement et évaluation sur le dataset public **Credit Card Transactions Fr
 ## 🏗️ Architecture
 
 ```
- Dataset Kaggle ──► train.py ──► models/fraud_xgb_model.joblib + reports/
+ Dataset Kaggle ──► Train_ML.py ──► models/fraud_xgb_model.joblib + reports/
                                          │
  Ingestion.py ──► API_Score.py (FastAPI :8001) ──► SQLite (fraud.db)
  (flux simulé)    features causales + scoring               │
@@ -131,15 +131,21 @@ Entraînement et évaluation sur le dataset public **Credit Card Transactions Fr
 
 ## 🔁 Flux de démonstration
 
-Pour alimenter le dashboard, un **simulateur d'ingestion** (`Ingestion.py`) génère un flux de transactions en continu : clients avec domicile fixe, lieux de transaction mondiaux (80 villes), comportements normaux et scénarios frauduleux (montants anormaux, rafales de transactions, voyages lointains). Il permet de voir le système réagir en direct, sans aucune donnée bancaire réelle.
+Pour alimenter le dashboard, un **simulateur d'ingestion** (`Ingestion.py`) génère un flux de transactions en continu vers l'API de scoring :
+
+- **Clients** : un domicile fixe par carte, lus depuis `data/sample/History.csv`
+- **Lieux de transaction** : 79 villes dans le monde
+- **Comportements** : transactions normales, anomalies bénignes et scénarios de fraude étiquetés : `IMPOSSIBLE_TRAVEL`, `EXTREME_AMOUNT`, `CARD_TESTING`, `VELOCITY_ATTACK`, `NIGHT_HIGH_RISK`
+
+Il permet de voir le système réagir en direct, sans aucune donnée bancaire réelle. Le script `simulate_world.py` génère en plus un jeu mondial étiqueté (vérité terrain incluse) pour évaluer le modèle sur d'autres profils de cartes.
 
 ---
 
 ## 🚀 Installation
 
 ```bash
-git clone https://github.com/<ton-user>/<ton-repo>.git
-cd <ton-repo>
+git clone https://github.com/Developer-Dynamo/transaction-fraud-detection.git
+cd transaction-fraud-detection
 
 python -m venv .venv
 source .venv/bin/activate        # Windows : .venv\Scripts\activate
@@ -147,29 +153,43 @@ pip install -r requirements.txt
 ```
 
 1. **Données** : télécharger le dataset Kaggle et placer le fichier préparé dans `data/` (voir `data/README.md`)
-2. **Entraînement** : `python Train_ML.py --data data/fraudTrain_clean.csv` (génère `models/` et `reports/`)
-3. **API de scoring** : `python API_Score.py` (port 8001)
-4. **Historique** : `python historique.py`
-5. **Flux en direct** : `python Ingestion.py`
-6. **Dashboard** : `python dashboard.py` (port 8002)
+2. **Entraînement** : `python src/Train_ML.py --data data/fraudTrain_clean.csv` (génère `models/` et `reports/`)
+3. **API de scoring** : `python src/API_Score.py` (port 8001)
+4. **Historique** : `python src/historique.py --csv data/sample/History.csv`
+5. **Flux en direct** : `python src/Ingestion.py`
+6. **Dashboard** : `python src/dashboard.py` (port 8002), puis créer un compte sur `/login`
 
+Les mêmes commandes existent via `make` (`make train`, `make api`, `make seed`, `make stream`, `make dashboard`).
 Les paramètres se règlent par variables d'environnement (voir `.env.example`).
+
+### Avec Docker
+
+```bash
+docker compose up --build                      # API + dashboard
+docker compose --profile stream up ingestion   # flux de transactions simulées
+```
 
 ---
 
 ## 📁 Structure du projet
 
 ```
-├── Train_ML.py        # Entraînement, calibration, seuils, rapports
-├── calibration.py     # Calibrateur de Platt sur la marge XGBoost
-├── API_Score.py       # API de scoring (FastAPI)
-├── Ingestion.py       # Simulateur de flux de transactions
-├── historique.py      # Rejeu de l'historique avant le flux
-├── world_cities.py    # Villes partagées (ingestion, historique, dashboard)
-├── dashboard.py       # Dashboard web
-├── models/            # Artefact du modèle
-├── reports/           # Métriques, graphiques, rapports qualité
-└── docs/screenshots/
+├── src/
+│   ├── Train_ML.py          # Entraînement, calibration, seuils, rapports
+│   ├── calibration.py       # Calibrateur de Platt sur la marge XGBoost
+│   ├── features_builder.py  # Calcul des features (causales)
+│   ├── API_Score.py         # API de scoring (FastAPI)
+│   ├── dashboard.py         # Dashboard web
+│   ├── Ingestion.py         # Simulateur de flux de transactions
+│   ├── historique.py        # Rejeu de l'historique avant le flux
+│   ├── simulate_world.py    # Jeu mondial simulé étiqueté
+│   └── world_cities.py      # Villes partagées
+├── data/                    # README + échantillon (data/sample/History.csv)
+├── models/                  # Artefact du modèle
+├── reports/                 # Métriques, graphiques, rapports qualité
+├── docs/screenshots/        # Captures du dashboard
+├── Dockerfile · docker-compose.yml · Makefile · requirements.txt
+└── .github/workflows/ci.yml
 ```
 
 ---
@@ -186,4 +206,4 @@ Les paramètres se règlent par variables d'environnement (voir `.env.example`).
 
 ## 👤 Auteur
 
-**Hajji Oussama** — [LinkedIn](linkedin.com/in/oussama-hajji-ensi) · [Email](mailto:oussama.hajji@ensi-uma.tn)
+**Hajji Oussama** — [GitHub](https://github.com/Developer-Dynamo)  — [Linkedin](https://linkedin.com/in/oussama-hajji-ensi) 
